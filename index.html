@@ -1,0 +1,301 @@
+<?php 
+session_start();
+include 'connection.php';
+if(isset($_POST['submit']))
+{
+    $uname1=$_POST['uname'];
+    $psw=$_POST['psw'];
+    $ran= rand(0, 999999); 
+$result1= mysqli_query($conn, "SELECT * FROM manuals_login WHERE uname='$uname1' ");
+while($row=mysqli_fetch_array($result1))
+	{
+			
+		$name=$row['uname'];
+             $_SESSION['uname']=$row['uname'];
+              $_SESSION['pass']=$row['pwd'];
+		$pass=$row['pwd'];
+                $email=$row['email'];
+                
+        }
+                if(($name==$uname1)&&($pass==$psw))
+                {
+                   
+            
+             $res=  "update manuals_login set skey='$ran' where uname='$name' ";
+             if (mysqli_query($conn, $res)) {
+   $url="www.niot.res.in";
+$mailto=$email;
+$msgsub="OTP Request  ";
+$msgbody="Your OTP Number :$ran ";
+
+
+
+require("PHPMailer/class.phpmailer.php");
+
+$mail = new PHPMailer();
+
+$mail->IsSMTP();                                      // set mailer to use SMTP
+//$mail->Host = "domino1.niot.res.in";  // specify main and backup server
+$mail->Host = "192.168.1.75";
+$mail->SMTPAuth = false;     // turn on SMTP authentication
+
+
+
+$mail->AddAddress($email);
+
+
+//$mail->AddAddress("tamilmani@niot.res.in");
+
+
+
+// //$mail->AddAddress("sysadmin@niot.res.in");  
+// //$mail->AddAddress("atf@niot.res.in");  
+// //$mail->AddReplyTo("rsundar@niot.res.in", "rsundar@niot.res.in");
+
+
+$mail->Subject = $msgsub;
+$mail->Body    = $msgbody;
+$mail->AltBody = "";
+$mail->IsHTML(true);
+//$file_to_attach = "/upload/";
+//$mail->AddAttachment( $file_to_attach , 'phpfmdJB0.pdf' );
+
+ header("Location: otpe.php");
+
+if(!$mail->Send())
+{
+   //echo "Message could not be sent. <p>";
+   echo "Mailer Error: " . $mail->ErrorInfo;
+   exit;
+
+}
+             
+        }  
+    
+}
+else {
+    
+    header("Location: index.php");
+}
+
+}
+
+?>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+                background-image: url('images/background11.jpg');
+                background-repeat: no-repeat;
+                font-family: calibri;
+               
+            }
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    
+}
+
+/* Set a style for all buttons */
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+    width: 10%  ;
+    padding: 10px 18px;
+    background-color: #f44336;
+}
+
+/* Center the image and position the close button */
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+    position: relative;
+}
+
+img.avatar {
+    width: 40%;
+    border-radius: 50%;
+}
+
+.container {
+    padding: 10px;
+    font-size: larger;
+    
+}
+
+span.psw {
+    float: right;
+    padding-top: 12px;
+}
+
+/* The Modal (background) */
+.modal {
+     /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+   
+    padding-top: 1px;
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 30%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button (x) */
+.close {
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: red;
+    cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+    from {-webkit-transform: scale(0)} 
+    to {-webkit-transform: scale(1)}
+}
+    
+@keyframes animatezoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
+}
+
+/* Change styles for span and cancel button on extra small screens */
+@media screen and (max-width: 300px) {
+    span.psw {
+       display: block;
+       float: none;
+    }
+    .cancelbtn {
+       width: 50%;
+    }
+}
+.engraved {
+    font-size: 30px;
+    font-family: calibri;
+    background-color: #666666;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: #140f06;
+  
+ }
+   h5 {
+    font-family: 'calibri', cursive;
+    font-size: 2px;
+    width: 50vw;
+    margin-top: calc(20vh - 10vw);
+    text-align: center;
+    background: linear-gradient(
+        60deg,
+        hsl(0, 75%, 50%) 50%,
+        hsl(20, 75%, 50%) 10%,
+       
+        
+        hsl(50, 75%, 50%) 40%,
+        hsl(130, 75%, 50%) 40%,
+        hsl(130, 75%, 50%) 55%,
+        hsl(200, 75%, 50%) 55%,
+        hsl(200, 75%, 50%) 10%,
+        hsl(260, 75%, 50%) 70%,
+        hsl(260, 75%, 50%) 85%,
+        hsl(0, 75%, 50%) 85%
+    );
+
+  
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: 10s BeProud linear infinite,
+    3s Always ease alternate infinite;
+}
+
+@keyframes BeProud {
+    100% { background-position: 50vw 0px; }
+}
+@keyframes Always {
+    100% { transform: scale(1.1);}}  
+</style>
+</head>
+<body>
+
+
+<div id="id01" class="modal">
+  
+    <table><tr><td style="width: 25%"></td><td style="width: 10%"><img src="images/NIOT LOGO.png" width="100"  ></td>
+                    <td style="color: rgb(1,82,170)"><center> <h2><font size=6px>A</font>COUSTIC <font size=6px>T</font>EST <font size=6px>F</font>ACILITY<br>NATIONAL INSTITUTE OF OCEAN TECHNOLOGY</h2></center></td> </tr>
+            </table>
+
+  <center><h5 class = "engraved"> LABORATORY QUALITY MANAGEMENT SYSTEM</h5>
+    
+          </center> 
+    
+      <form method="post" autocomplete="off" >
+             <div class="imgcontainer">
+    
+      <label ><b >LOGIN PAGE</b></label>
+    </div>
+      <center>    <fieldset style="width:30%">  
+             
+
+        <div class="container">
+      <label for="uname"><b>Username</b></label><br>
+      <input type="text" placeholder="Enter Username" name="uname" required><br>
+
+      <label for="psw"><b>Password</b></label><br>
+      <input type="password" placeholder="Enter Password" name="psw" required><br>
+      
+        
+      <button type="submit" name="submit">Login</button>
+      
+    </div>
+          </fieldset></center>
+   
+  </form> 
+</div>
+ 
+
+
+</body>
+</html>
